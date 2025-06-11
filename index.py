@@ -1,6 +1,4 @@
-# ─────────────────────────────────────────────
-# index.py – FAISS Index Management
-# ─────────────────────────────────────────────
+@@ -4,33 +4,36 @@
 import os
 import logging
 from dotenv import load_dotenv
@@ -26,6 +24,7 @@ def load_or_create_faiss():
         return index
 
 def update_faiss_index(new_docs):
+    """Merge new documents into the FAISS index and return the updated store."""
     embedder = OpenAIEmbeddings()
     new_index = FAISS.from_documents(new_docs, embedder)
     existing = load_or_create_faiss()
@@ -34,3 +33,6 @@ def update_faiss_index(new_docs):
         existing.save_local(FAISS_DIR)
     else:
         new_index.save_local(FAISS_DIR)
+        return existing
+    new_index.save_local(FAISS_DIR)
+    return new_index
